@@ -14,3 +14,8 @@
 ### Промежуточные результаты: 
 [Admin sudo без пароля.](./sudo_no_pass.png)
 [Developer sudo без пароля для докера](./docker_no_sudo.png)
+
+
+
+### Пункт 4.
+1. Установка Prometheus + Node exporter. tl;dr Скачал архивы с релиза в гитлабе, распаковал /etc, /var/, /usr/local/bin. Настроил по служенбному пользователю на каждую из них и сделал по сервису с включением в автостарт. [тут](./prometheus_users.png). [тут](./node_exporter_service.png) [и тут](./prometheus_service.png). Раздал пользователям по соответствующей роли. [Работающая node_exporter](./node_exporter.png)
