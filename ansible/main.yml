@@ -1,0 +1,82 @@
+-
+  name: "Install prometheus"
+  hosts: node
+  tasks:
+
+    - name: "Add prometheus group"
+      become: true
+      group: 
+        name: prometheus
+        state: present
+
+
+    - name: "Add prometheus user"
+      become: true
+      user: 
+        name: prometheus
+        state: present
+        create_home: false
+        group: prometheus
+
+    - name: "Create directories for prometheus operations"
+      become: true 
+      file: 
+        path: '{{ item }}'
+        state: directory
+        loop: 
+          - /var/lib/prometheus
+          - /etc/prometheus
+
+    
+    - name: "Download prometheus to /tmp"
+      url: https://github.com/prometheus/prometheus/releases/download/v3.5.1/prometheus-3.5.1.linux-amd64.tar.gz
+      dest: /tmp
+
+    - name: "Dearchive prometheus"
+      command: tar -zxvf --skip-old-files prometheus-3.5.1.linux-amd64.tar.gz chdir=/tmp
+
+    - name: "Move files"
+      copy: 
+        src: '{{ item.src }}'
+        dest: '{{ item.dest }}'
+        remote_src: true
+      loop: 
+        - 
+          src: '/tmp/prometheus-3.5.1.linux-amd64/prometheus'
+          dest: '/usr/local/bin'
+        - 
+          src: '/tmp/prometheus-3.5.1.linux-amd64/promtool'
+          dest: '/usr/local/bin'
+        -
+          src: '/tmp/prometheus-3.5.1.linux-amd64/prometheus.yml'
+          dest: '/etc/prometheus'
+    
+    - name: 'Give permissions to prometheus user'
+      file: 
+        path: '{{ item }}'
+        group: prometheus
+        owner: prometheus
+        recurse: true
+        become: true
+        loop: 
+          - /etc/prometheus
+          - /var/lib/prometheus
+
+    - name: 'Add service in systemd'
+      become: true
+      copy: 
+        src: './prometheus.service'
+        dest: '/etc/systemd/system/prometheus.service'
+        state: present
+    
+    - name: 'Reload prometheus'
+      command: sudo systemctl deamon-reload
+      become: true
+
+    - name: 'Add prometheus to autostart'
+      command: sudo systemctl enable prometheus
+      become: true
+
+    - name: 'Firewall access'
+      command: sudo ufw allow 9090/tcp
+      become: true
