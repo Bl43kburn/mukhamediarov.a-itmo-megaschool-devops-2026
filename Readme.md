@@ -18,4 +18,7 @@
 
 
 ### Пункт 4.
-1. Установка Prometheus + Node exporter. tl;dr Скачал архивы с релиза в гитлабе, распаковал /etc, /var/, /usr/local/bin. Настроил по служенбному пользователю на каждую из них и сделал по сервису с включением в автостарт. [тут](./prometheus_users.png). [тут](./node_exporter_service.png) [и тут](./prometheus_service.png). Раздал пользователям по соответствующей роли. [Работающая node_exporter](./node_exporter.png)
+1. Установка Prometheus + Node exporter. tl;dr Скачал архивы с релиза в гитлабе, распаковал /etc, /var/, /usr/local/bin. Настроил по служенбному пользователю на каждую из них и сделал по сервису с включением в автостарт. [тут](./prometheus_users.png). [тут](./node_exporter_service.png) [и тут](./prometheus_service.png). Раздал пользователям по соответствующей роли. [Работающая node_exporter](./node_exporter.png). 
+### Промежуточные результаты - prometheus, работающий с node_exporter [тут](./prometheus_node_exporter.png)
+
+1.1 Добавил примерный [ansible playbook](./ansible/main.yml) для установки prometheus на хосте. На этом у меня закончилось время
